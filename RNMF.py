@@ -39,6 +39,12 @@ class RobustNMF:
     
         return S
 
+    def update_W(self,X,W,H,S):
+
+        numerator = np.abs(np.dot(S-X,H.T)) - np.dot(S-X,H.T)
+        denominator = 2 * np.dot(np.dot(W,H),H.T)
+
+        return (numerator/denominator)*W
 
 
     def rnmf(self):
@@ -54,8 +60,10 @@ class RobustNMF:
         for iter in range(maxiter):
 
             S = X - np.dot(W,H)
-            self.update_S(S,X.shape,lamda)
+            S = self.update_S(S,X.shape,lamda)
 
+
+            W = self.update_W(X,W,H,S)
 
 
 
